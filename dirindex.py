@@ -20,8 +20,15 @@ def parse_args():
     return argparser.parse_args()
 
 def index(dir, recursive):
+    index = ''
     if recursive:
-        pass # listdir ospathisdir()
+        for path, dirs, files in os.walk(dir,topdown=False):
+            if not '/.' in path:
+                entries = [path, sorted([directory for directory in dirs
+                                        if not directory.startswith('.')]),
+                            sorted([fil for fil in files if not fil.startswith('.')])]
+                print entries
+                print '--------------'
     else:
         walk = os.walk(dir).next()
         entries = sorted(
