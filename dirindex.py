@@ -29,7 +29,7 @@ class dir:
         dir_strs = [dir.__str__(depth + 1) for dir in self.dirs]
         file_strs = [(depth + 1) * self.space + fil for fil in self.files]
         strs = sorted(dir_strs + file_strs, key=str.lower)
-        pretty_dir_string = depth*self.space + self.name
+        pretty_dir_string = depth*self.space + self.name + '/'
         for entry in strs:
             pretty_dir_string += '\n' + entry
         return pretty_dir_string
@@ -79,14 +79,14 @@ def index(rootdir):
             for subdir in entry[1]:
                 dirs[dirname].add_dir(dirs[os.path.join(dirname,subdir)])
         
-        index = dirs[rootdir].__str__()
+        index = dirs[rootdir].__str__() + '\n'
 
     else:
-        walk = os.walk(dir).next()
+        walk = os.walk(rootdir).next()
         entries = sorted(
             [entry+'/' for entry in walk[1] if not entry.startswith('.')] +
             [entry for entry in walk[2] if not entry.startswith('.')])
-        index = '\n'.join(entries)
+        index = '\n'.join(entries) + '\n'
 
     return index
 
@@ -96,9 +96,9 @@ def update_index_file(directory):
     # every directory in the tree, while this could be done all at once since for
     # the __str__ of a higher level directory, the __str__ of a lower level
     # directory is needed.
-    with open(directory + 'index_'
-                + os.path.basename(os.path.abspath(directory))
-                + '.txt', 'w') as index_file:
+    with open(os.path.join(os.path.abspath(directory),
+                            os.path.basename(os.path.abspath(directory)))
+                + '.directory_index', 'w') as index_file:
         index_file.write(index(directory))
 
 
@@ -107,7 +107,8 @@ if __name__ == '__main__':
     if args.recurseinto:
         all_dirs_in_tree = []
         for directory in args.directories:
-            all_dirs_in_tree += [path for path, x, y in os.walk(directory)]
+            all_dirs_in_tree += [path for path, x, y in
+                                    os.walk(directory, followlinks=True)]
         for directory in all_dirs_in_tree:
             update_index_file(directory)
     else:
