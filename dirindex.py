@@ -98,6 +98,8 @@ def parse_args():
                     ).format(prog=parser.prog))
 
     argparser = argparse.ArgumentParser(description='Index a directory.')
+    argparser.add_argument('--longhelp', action=longhelp_print, nargs=0,
+        help='show a help message with usage examples')
     argparser.add_argument('-r', '--recursive', action='store_true',
         help=('create the index file(s) by recursing into every directory, entries that '
                 'are found at deeper levels of the directory structure are indented'))
@@ -107,8 +109,6 @@ def parse_args():
     argparser.add_argument('-S', '--savedir',
         help=('store all the index files in the directory specified instead of in the '
                 'directory they index, the directory must exist'))
-    argparser.add_argument('--longhelp', action=longhelp_print, nargs=0,
-        help='show a help message with usage examples')
     argparser.add_argument('directories', nargs='*', help=('directory or list of '
                             'directories to index'))
 
