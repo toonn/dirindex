@@ -36,9 +36,68 @@ class dir:
 
 
 def parse_args():
-    argparser = argparse.ArgumentParser(description='Index a directory.',
-        epilog='''Usage examples: ''')
+    class longhelp_print(argparse.Action):
+        def __call__(self, parser, namespace, values, option_string=None):
+            print(parser.format_help() + '\n' + 
+                    ('Usage examples:\n'
+                    '\n'
+                    '    this/\n'
+                    '        is/\n'
+                    '            an/\n'
+                    '            example/\n'
+                    '                directory\n'
+                    '            structure/\n'
+                    '\n'
+                    '    "{prog!s} this/" gives the following index file:\n'
+                    '        is/\n'
+                    '        EOF\n'
+                    '\n'
+                    '    "{prog!s} -r this/":\n'
+                    '        is/\n'
+                    '            an/\n'
+                    '            example/\n'
+                    '                directory\n'
+                    '            structure/\n'
+                    '        EOF\n'
+                    '\n'
+                    '    These files would be saved as "this.directory_index" under the '
+                    '"this/" directory.\n'
+                    '    If you specify --savedir SaveDir, the files would be saved '
+                    'under the "SaveDir/"\n    directory.\n'
+                    '\n'
+                    '    "{prog!s} -rR this" would create the following files:\n'
+                    '        this/this.directory_index:\n'
+                    '            is/\n'
+                    '                an/\n'
+                    '                example/\n'
+                    '                    directory\n'
+                    '                structure/\n'
+                    '            EOF\n'
+                    '\n'
+                    '        this/is/is.directory_index:\n'
+                    '            an/\n'
+                    '            example/\n'
+                    '                directory\n'
+                    '            structure/\n'
+                    '            EOF\n'
+                    '\n'
+                    '        this/is/an/an.directory_index:\n'
+                    '            EOF\n'
+                    '\n'
+                    '        this/is/example/example.directory_index:\n'
+                    '            directory\n'
+                    '            EOF\n'
+                    '\n'
+                    '        this/is/structure/structure.directory_index:\n'
+                    '            EOF\n'
+                    '\n'
+                    '                    '
+                    'This {prog!s} has Super Chow Powers, so enjoy.\n'
+                    '                    '
+                    '  Original author: https://github.com/toonn'
+                    ).format(prog=parser.prog))
 
+    argparser = argparse.ArgumentParser(description='Index a directory.')
     argparser.add_argument('-r', '--recursive', action='store_true',
         help=('create the index file(s) by recursing into every directory, entries that '
                 'are found at deeper levels of the directory structure are indented'))
@@ -48,7 +107,9 @@ def parse_args():
     argparser.add_argument('-S', '--savedir',
         help=('store all the index files in the directory specified instead of in the '
                 'directory they index, the directory must exist'))
-    argparser.add_argument('directories', nargs='+', help=('directory or list of '
+    argparser.add_argument('--longhelp', action=longhelp_print, nargs=0,
+        help='show a help message with usage examples')
+    argparser.add_argument('directories', nargs='*', help=('directory or list of '
                             'directories to index'))
 
     return argparser.parse_args()
