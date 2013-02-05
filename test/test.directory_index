@@ -1,26 +1,7 @@
-test/
-    file1
-    file2
-    filedir/
-        filedir.directory_index
-    test.directory_index
-    test1/
-        test1.directory_index
-        test11/
-            test11.directory_index
-        test12/
-            test12.directory_index
-    test2/
-        file21
-        file22
-        file23
-        file24
-        test2.directory_index
-    test3/
-        file31
-        file32
-        test3.directory_index
-        test31/
-            file311
-            file312
-            test31.directory_index
+file1
+file2
+filedir/
+test.directory_index
+test1/
+test2/
+test3/

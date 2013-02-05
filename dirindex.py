@@ -44,7 +44,10 @@ def parse_args():
                 'are found at deeper levels of the directory structure are indented'))
     argparser.add_argument('-R', '--recurseinto', action='store_true',
         help=('recurse into every directory in the tree and create an index file in that '
-                'directory '))
+                'directory'))
+    argparser.add_argument('-S', '--savedir',
+        help=('store all the index files in the directory specified instead of in the '
+                'directory they index, the directory must exist'))
     argparser.add_argument('directories', nargs='+', help=('directory or list of '
                             'directories to index'))
 
@@ -96,8 +99,11 @@ def update_index_file(directory):
     # every directory in the tree, while this could be done all at once since for
     # the __str__ of a higher level directory, the __str__ of a lower level
     # directory is needed.
-    with open(os.path.join(os.path.abspath(directory),
-                            os.path.basename(os.path.abspath(directory)))
+    if args.savedir is None:
+        savedir = os.path.abspath(directory)
+    else:
+        savedir = os.path.abspath(args.savedir)
+    with open(os.path.join(savedir, os.path.basename(os.path.abspath(directory)))
                 + '.directory_index', 'w') as index_file:
         index_file.write(index(directory))
 
